@@ -1,0 +1,10 @@
+version: '3.4'
+
+services:
+  nubkteste01:
+    image: nubkteste
+    build:
+      context: .
+      dockerfile: NuBkTeste01/Dockerfile
+    stdin_open: true
+    tty: true

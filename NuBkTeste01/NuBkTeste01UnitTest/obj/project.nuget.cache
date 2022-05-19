@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "1PtarlaxJvPZ7rKq7SXYiTbpHpNS3YObq2S0Lt7OyKCkCjqdwaGGDxSPl8PNl1yYzAxL2KOtW8soDXWdk15FMQ==",
+  "dgSpecHash": "ux6SRb0cuIRwAs7xupgglJXvqICTNtLQtA7BC8dITn6CT2y9IT7qALhJvSSR8zqt0X4K9LfhSCkRuB2llZqzBQ==",
   "success": true,
   "projectFilePath": "C:\\NuBkTeste\\NuBkTeste01\\NuBkTeste01UnitTest\\NuBkTeste01UnitTest.csproj",
   "expectedPackageFiles": [
@@ -38,6 +38,7 @@
     "C:\\Users\\David\\.nuget\\packages\\microsoft.netcore.targets\\1.1.0\\microsoft.netcore.targets.1.1.0.nupkg.sha512",
     "C:\\Users\\David\\.nuget\\packages\\microsoft.testplatform.objectmodel\\16.11.0\\microsoft.testplatform.objectmodel.16.11.0.nupkg.sha512",
     "C:\\Users\\David\\.nuget\\packages\\microsoft.testplatform.testhost\\16.11.0\\microsoft.testplatform.testhost.16.11.0.nupkg.sha512",
+    "C:\\Users\\David\\.nuget\\packages\\microsoft.visualstudio.azure.containers.tools.targets\\1.14.0\\microsoft.visualstudio.azure.containers.tools.targets.1.14.0.nupkg.sha512",
     "C:\\Users\\David\\.nuget\\packages\\microsoft.win32.primitives\\4.3.0\\microsoft.win32.primitives.4.3.0.nupkg.sha512",
     "C:\\Users\\David\\.nuget\\packages\\microsoft.win32.registry\\5.0.0\\microsoft.win32.registry.5.0.0.nupkg.sha512",
     "C:\\Users\\David\\.nuget\\packages\\netstandard.library\\1.6.1\\netstandard.library.1.6.1.nupkg.sha512",

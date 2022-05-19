@@ -90,8 +90,7 @@ namespace NuBkTeste01
         private static Operations StartGreeting()
         {
             string option = startView();
-
-            var errorMessage = ValidateOperation(option);
+            var errorMessage =  ValidateOperation(option);
 
             while (!string.IsNullOrEmpty(errorMessage))
             {
@@ -124,8 +123,8 @@ namespace NuBkTeste01
 
                                         Operations.Leave.ToString(),
                                         (int)Operations.Leave);
-
-            return Console.ReadLine();
+            string input = Console.ReadLine();
+            return input;
         }
 
         /// <summary>

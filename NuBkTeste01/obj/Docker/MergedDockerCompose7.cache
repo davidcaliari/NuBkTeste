@@ -1,0 +1,14 @@
+name: dockercompose14395064152451966241
+services:
+  nubkteste01:
+    build:
+      context: C:\NuBkTeste\NuBkTeste01
+      dockerfile: NuBkTeste01/Dockerfile
+    image: nubkteste
+    networks:
+      default: null
+    stdin_open: true
+    tty: true
+networks:
+  default:
+    name: dockercompose14395064152451966241_default

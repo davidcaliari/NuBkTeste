@@ -1,0 +1,54 @@
+name: dockercompose14395064152451966241
+services:
+  nubkteste01:
+    build:
+      context: C:\NuBkTeste\NuBkTeste01
+      dockerfile: NuBkTeste01/Dockerfile
+      labels:
+        com.microsoft.created-by: visual-studio
+        com.microsoft.visual-studio.project-name: NuBkTeste01
+      target: base
+    container_name: NuBkTeste01
+    entrypoint:
+    - tail
+    - -f
+    - /dev/null
+    environment:
+      NUGET_FALLBACK_PACKAGES: /root/.nuget/fallbackpackages
+    image: NuBkTeste:dev
+    labels:
+      com.microsoft.visualstudio.debuggee.arguments: ' --additionalProbingPath /root/.nuget/packages
+        --additionalProbingPath /root/.nuget/fallbackpackages  "/app/bin/Debug/netcoreapp3.1/NuBkTeste01.dll"'
+      com.microsoft.visualstudio.debuggee.killprogram: /bin/sh -c "if PID=$$(pidof
+        dotnet); then kill $$PID; fi"
+      com.microsoft.visualstudio.debuggee.program: dotnet
+      com.microsoft.visualstudio.debuggee.workingdirectory: /app
+    networks:
+      default: null
+    tty: true
+    volumes:
+    - type: bind
+      source: C:\NuBkTeste\NuBkTeste01\NuBkTeste01
+      target: /app
+      bind:
+        create_host_path: true
+    - type: bind
+      source: C:\Users\David\vsdbg\vs2017u5
+      target: /remote_debugger
+      bind:
+        create_host_path: true
+    - type: bind
+      source: C:\Users\David\.nuget\packages\
+      target: /root/.nuget/packages
+      read_only: true
+      bind:
+        create_host_path: true
+    - type: bind
+      source: C:\Program Files (x86)\Microsoft Visual Studio\Shared\NuGetPackages
+      target: /root/.nuget/fallbackpackages
+      read_only: true
+      bind:
+        create_host_path: true
+networks:
+  default:
+    name: dockercompose14395064152451966241_default
