@@ -12,14 +12,25 @@ using System.Text.Json;
 
 namespace NuBkTeste01
 {
-    public enum Operations
-    {
-        Account_Creation = 1,
-        Transaction_Autorization = 2,
-        Leave = 3
-    }
+    
     public class Program
     {
+        
+
+        private enum Operations
+        {
+            Account_Creation = 1,
+            Transaction_Autorization = 2,
+            Leave = 3
+        }
+
+        static AccountsVO accounts;
+
+        public Program()
+        {
+            
+        }
+
         static void Main(string[] args)
         {
             //Start config settings 
@@ -43,8 +54,8 @@ namespace NuBkTeste01
                 .Build();
 
             var svcAccount = ActivatorUtilities.CreateInstance<AccountBusinessImplementation>(host.Services);
-
-            var accounts = new AccountsVO();
+            
+            
             var account = new AccountVO();
             var violations = new ViolationsVO();
             var operation = StartGreeting();
@@ -60,20 +71,20 @@ namespace NuBkTeste01
                         account.activeCard = true;
                         account.availableLimit = Convert.ToInt32(creditValue);
 
-                        accounts.accounts = account;
+                        accounts = new AccountsVO() { accounts = account };
+                        //accounts.accounts = account;
 
                         Console.Clear();
 
                         Log.Logger.Information(JsonSerializer.Serialize(accounts));
                         operation = StartGreeting();
                         break;
-                    default:
-                        Log.Logger.Information(JsonSerializer.Serialize(accounts));
-
-                        operation = StartGreeting();
-
+                    case Operations.Transaction_Autorization:
                         Console.Clear();
-
+                        Log.Logger.Information(JsonSerializer.Serialize(accounts));
+                        operation = StartGreeting();
+                        break;
+                    default:
                         break;
                 }
             }
@@ -131,8 +142,10 @@ namespace NuBkTeste01
         public static string ValidateOperation(string param)
         {
             int value = 0;
+            
             if (int.TryParse(param, out value) && Enum.IsDefined(typeof(Operations), value))
             {
+                if((int)Operations.Account_Creation == value && accounts != null) return string.Format("You can have only one account! {0}", JsonSerializer.Serialize(accounts));
                 return string.Empty;
             }
             else
