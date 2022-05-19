@@ -1,6 +1,4 @@
 ﻿using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Serilog;
 using System;
 using System.IO;
@@ -12,7 +10,7 @@ namespace NuBkTeste01
         Account_Creation = 1,
         Transaction_Autorization = 2
     }
-    internal class Program
+    public class Program
     {
         static void Main(string[] args)
         {
@@ -24,23 +22,67 @@ namespace NuBkTeste01
                 .Enrich.FromLogContext()
                 .WriteTo.Console()
                 .CreateLogger();
-            
+
             StartGreeting();
         }
 
+        /// <summary>
+        /// Creat the start page console
+        /// </summary>
         private static void StartGreeting()
+        {
+            string option = startView();
+
+            var errorMessage = ValidateOperation(option);
+
+            while (!string.IsNullOrEmpty(errorMessage))
+            {
+                Console.Clear();
+                Log.Logger.Information(errorMessage);
+
+                option = startView();
+                errorMessage = ValidateOperation(option);
+            }
+
+            var operation = (Operations)Convert.ToInt32(option);
+            Log.Logger.Information("Operation chose was: {0}", operation.ToString().Replace("_", " "));
+        }
+
+        /// <summary>
+        /// Create and control start layout with validations
+        /// </summary>
+        /// <returns>Selected Operation</returns>
+        private static string startView()
         {
             Log.Logger.Information("\n Operations:\n {0}:         Option: {1} \n {2}: Option: {3}",
 
-                            Operations.Account_Creation.ToString().Replace("_", " "),
-                            (int)Operations.Account_Creation,
+                                        Operations.Account_Creation.ToString().Replace("_", " "),
+                                        (int)Operations.Account_Creation,
 
-                            Operations.Transaction_Autorization.ToString().Replace("_", " "),
-                            (int)Operations.Transaction_Autorization);
+                                        Operations.Transaction_Autorization.ToString().Replace("_", " "),
+                                        (int)Operations.Transaction_Autorization);
 
-            int option = Convert.ToInt32(Console.ReadLine());
-            Log.Logger.Information("Operation chose was: {0}", ((Operations)option).ToString().Replace("_", " "));
+            return Console.ReadLine();
         }
+
+        /// <summary>
+        /// Validate the operations
+        /// </summary>
+        /// <param name="param"></param>
+        /// <returns>Message Error</returns>
+        public static string ValidateOperation(string param)
+        {
+            int i = 0;
+            if (int.TryParse(param, out i))
+            {
+                return string.Empty;
+            }
+            else
+            {
+                return "Chose a valid option!";
+            }
+        }
+
 
         static void BuildConfig(IConfigurationBuilder builder)
         {

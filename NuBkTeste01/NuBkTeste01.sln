@@ -5,6 +5,8 @@ VisualStudioVersion = 17.1.32328.378
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuBkTeste01", "NuBkTeste01\NuBkTeste01.csproj", "{0E9ABDFA-9F64-4289-91AB-ADB04C236482}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuBkTeste01UnitTest", "NuBkTeste01UnitTest\NuBkTeste01UnitTest.csproj", "{E3792BDF-3049-4D8C-9FCC-FFA9036C84B4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{0E9ABDFA-9F64-4289-91AB-ADB04C236482}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0E9ABDFA-9F64-4289-91AB-ADB04C236482}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0E9ABDFA-9F64-4289-91AB-ADB04C236482}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E3792BDF-3049-4D8C-9FCC-FFA9036C84B4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E3792BDF-3049-4D8C-9FCC-FFA9036C84B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E3792BDF-3049-4D8C-9FCC-FFA9036C84B4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E3792BDF-3049-4D8C-9FCC-FFA9036C84B4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
