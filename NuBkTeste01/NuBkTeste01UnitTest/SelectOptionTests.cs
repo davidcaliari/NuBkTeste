@@ -1,6 +1,7 @@
 using System;
 using Xunit;
 using NuBkTeste01;
+using NuBkTeste01.Data.VO;
 
 namespace NuBkTeste01UnitTest
 {
@@ -9,6 +10,7 @@ namespace NuBkTeste01UnitTest
         [Fact]
         public void ValidCreatAccountOption()
         {
+
             Assert.Empty(Program.ValidateOperation("1"));
         }
         [Fact]
@@ -26,6 +28,20 @@ namespace NuBkTeste01UnitTest
         public void InvalidTransactionAutorizationOption()
         {
             Assert.NotEmpty(Program.ValidateOperation("0"));
+        }
+
+        [Fact]
+        public void InvalidDuplicatedtAccount()
+        {
+            Program.accounts = new AccountsVO()
+            {
+                accounts = new AccountVO()
+                {
+                    activeCard = true,
+                    availableLimit = 75
+                }
+            };
+            Assert.NotEmpty(Program.ValidateOperation("1"));
         }
     }
 }

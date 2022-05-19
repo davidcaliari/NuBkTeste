@@ -6,16 +6,15 @@ using NuBkTeste01.Business.Implementation;
 using NuBkTeste01.Data.VO;
 using Serilog;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
 
 namespace NuBkTeste01
 {
-    
+
     public class Program
     {
-        
+
 
         private enum Operations
         {
@@ -24,12 +23,7 @@ namespace NuBkTeste01
             Leave = 3
         }
 
-        static AccountsVO accounts;
-
-        public Program()
-        {
-            
-        }
+        public static AccountsVO accounts;
 
         static void Main(string[] args)
         {
@@ -54,13 +48,13 @@ namespace NuBkTeste01
                 .Build();
 
             var svcAccount = ActivatorUtilities.CreateInstance<AccountBusinessImplementation>(host.Services);
-            
-            
+
+
             var account = new AccountVO();
             var violations = new ViolationsVO();
             var operation = StartGreeting();
 
-            while(operation != Operations.Leave)
+            while (operation != Operations.Leave)
             {
                 switch (operation)
                 {
@@ -127,7 +121,7 @@ namespace NuBkTeste01
 
                                         Operations.Transaction_Autorization.ToString().Replace("_", " "),
                                         (int)Operations.Transaction_Autorization,
-                                        
+
                                         Operations.Leave.ToString(),
                                         (int)Operations.Leave);
 
@@ -141,11 +135,15 @@ namespace NuBkTeste01
         /// <returns>Message Error</returns>
         public static string ValidateOperation(string param)
         {
+            //Only valid operations
             int value = 0;
-            
             if (int.TryParse(param, out value) && Enum.IsDefined(typeof(Operations), value))
             {
-                if((int)Operations.Account_Creation == value && accounts != null) return string.Format("You can have only one account! {0}", JsonSerializer.Serialize(accounts));
+                //Validate multiple accounts
+                if ((int)Operations.Account_Creation == value && accounts != null)
+                {
+                    return string.Format("You can have only one account! {0}", JsonSerializer.Serialize(accounts));
+                }
                 return string.Empty;
             }
             else
