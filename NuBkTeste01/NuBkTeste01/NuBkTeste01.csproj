@@ -18,8 +18,4 @@
     </None>
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Business\Implementation\" />
-  </ItemGroup>
-
 </Project>

@@ -1,4 +1,8 @@
 ﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using NuBkTeste01.Business;
+using NuBkTeste01.Business.Implementation;
 using Serilog;
 using System;
 using System.IO;
@@ -23,7 +27,20 @@ namespace NuBkTeste01
                 .WriteTo.Console()
                 .CreateLogger();
 
+            var host = Host.CreateDefaultBuilder()
+                .ConfigureServices((context, services) =>
+                {
+                    services.AddTransient<IAccountBusiness, AccountBusinessImplementation>();
+                })
+                .UseSerilog()
+                .Build();
+
+            var svcAccount = ActivatorUtilities.CreateInstance<AccountBusinessImplementation>(host.Services);
+            
+
             StartGreeting();
+
+            svcAccount.Run();
         }
 
         /// <summary>
