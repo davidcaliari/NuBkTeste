@@ -3,30 +3,37 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NuBkTeste01.Business;
 using NuBkTeste01.Business.Implementation;
+using NuBkTeste01.Data.VO;
 using Serilog;
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Text.Json;
 
 namespace NuBkTeste01
 {
     public enum Operations
     {
         Account_Creation = 1,
-        Transaction_Autorization = 2
+        Transaction_Autorization = 2,
+        Leave = 3
     }
     public class Program
     {
         static void Main(string[] args)
         {
+            //Start config settings 
             var builder = new ConfigurationBuilder();
             BuildConfig(builder);
 
+            //Config Logger
             Log.Logger = new LoggerConfiguration()
                 .ReadFrom.Configuration(builder.Build())
                 .Enrich.FromLogContext()
                 .WriteTo.Console()
                 .CreateLogger();
 
+            //Injection Dependency
             var host = Host.CreateDefaultBuilder()
                 .ConfigureServices((context, services) =>
                 {
@@ -36,17 +43,46 @@ namespace NuBkTeste01
                 .Build();
 
             var svcAccount = ActivatorUtilities.CreateInstance<AccountBusinessImplementation>(host.Services);
-            
 
-            StartGreeting();
+            var accounts = new AccountsVO();
+            var account = new AccountVO();
+            var violations = new ViolationsVO();
+            var operation = StartGreeting();
 
-            svcAccount.Run();
+            while(operation != Operations.Leave)
+            {
+                switch (operation)
+                {
+                    case Operations.Account_Creation:
+                        Log.Logger.Information("\n Amount to be credited:");
+                        var creditValue = Console.ReadLine();
+
+                        account.activeCard = true;
+                        account.availableLimit = Convert.ToInt32(creditValue);
+
+                        accounts.accounts = account;
+
+                        Console.Clear();
+
+                        Log.Logger.Information(JsonSerializer.Serialize(accounts));
+                        operation = StartGreeting();
+                        break;
+                    default:
+                        Log.Logger.Information(JsonSerializer.Serialize(accounts));
+
+                        operation = StartGreeting();
+
+                        Console.Clear();
+
+                        break;
+                }
+            }
         }
 
         /// <summary>
         /// Creat the start page console
         /// </summary>
-        private static void StartGreeting()
+        private static Operations StartGreeting()
         {
             string option = startView();
 
@@ -61,8 +97,8 @@ namespace NuBkTeste01
                 errorMessage = ValidateOperation(option);
             }
 
-            var operation = (Operations)Convert.ToInt32(option);
-            Log.Logger.Information("Operation chose was: {0}", operation.ToString().Replace("_", " "));
+            Console.Clear();
+            return (Operations)Convert.ToInt32(option);
         }
 
         /// <summary>
@@ -71,13 +107,18 @@ namespace NuBkTeste01
         /// <returns>Selected Operation</returns>
         private static string startView()
         {
-            Log.Logger.Information("\n Operations:\n {0}:         Option: {1} \n {2}: Option: {3}",
+            Log.Logger.Information("\n Operations:\n    {0}:         Option: {1}" +
+                " \n    {2}: Option: {3}" +
+                " \n    {4}:                    Option: {5}",
 
                                         Operations.Account_Creation.ToString().Replace("_", " "),
                                         (int)Operations.Account_Creation,
 
                                         Operations.Transaction_Autorization.ToString().Replace("_", " "),
-                                        (int)Operations.Transaction_Autorization);
+                                        (int)Operations.Transaction_Autorization,
+                                        
+                                        Operations.Leave.ToString(),
+                                        (int)Operations.Leave);
 
             return Console.ReadLine();
         }
@@ -101,7 +142,7 @@ namespace NuBkTeste01
         }
 
         /// <summary>
-        /// Configure config settings
+        /// Prepare config settings
         /// </summary>
         /// <param name="builder"></param>
         static void BuildConfig(IConfigurationBuilder builder)
