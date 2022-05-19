@@ -72,8 +72,8 @@ namespace NuBkTeste01
         /// <returns>Message Error</returns>
         public static string ValidateOperation(string param)
         {
-            int i = 0;
-            if (int.TryParse(param, out i))
+            int value = 0;
+            if (int.TryParse(param, out value) && Enum.IsDefined(typeof(Operations), value))
             {
                 return string.Empty;
             }
@@ -83,7 +83,10 @@ namespace NuBkTeste01
             }
         }
 
-
+        /// <summary>
+        /// Configure config settings
+        /// </summary>
+        /// <param name="builder"></param>
         static void BuildConfig(IConfigurationBuilder builder)
         {
             builder.SetBasePath(Directory.GetCurrentDirectory())
