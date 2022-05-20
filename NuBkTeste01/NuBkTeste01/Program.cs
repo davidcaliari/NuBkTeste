@@ -16,18 +16,33 @@ namespace NuBkTeste01
     {
 
 
-        private enum Operations
+        public enum Operations
         {
             Account_Creation = 1,
             Transaction_Autorization = 2,
             Leave = 3
         }
 
+        public static AccountBusinessImplementation svcAccount;
         public static AccountsVO accounts;
 
         static void Main(string[] args)
         {
             //Start config settings 
+            BeginConfig();
+
+            //Start Applications with rules
+            Run();
+
+            var violations = new ViolationsVO();
+
+        }
+
+        /// <summary>
+        /// Configurations to start the application
+        /// </summary>
+        private static void BeginConfig()
+        {
             var builder = new ConfigurationBuilder();
             BuildConfig(builder);
 
@@ -47,69 +62,71 @@ namespace NuBkTeste01
                 .UseSerilog()
                 .Build();
 
-            var svcAccount = ActivatorUtilities.CreateInstance<AccountBusinessImplementation>(host.Services);
+            svcAccount = ActivatorUtilities.CreateInstance<AccountBusinessImplementation>(host.Services);
+        }
 
 
-            var account = new AccountVO();
-            var violations = new ViolationsVO();
-            var operation = StartGreeting();
+        private static void Run()
+        {
+            var operation = startView();
 
             while (operation != Operations.Leave)
             {
                 switch (operation)
                 {
                     case Operations.Account_Creation:
-                        Log.Logger.Information("\n Amount to be credited:");
-                        var creditValue = Console.ReadLine();
-
-                        account.activeCard = true;
-                        account.availableLimit = Convert.ToInt32(creditValue);
-
-                        accounts = new AccountsVO() { accounts = account };
-                        //accounts.accounts = account;
 
                         Console.Clear();
+                        //Verify with alredy exist the account
+                        if (accounts != null)
+                        {
+                            Log.Logger.Information(string.Format("You can have only one account! {0}", JsonSerializer.Serialize(accounts)));
+                            operation = startView();
+                            break;
+                        }
 
+                        //if the amout typed is valid create account
+                        Log.Logger.Information("\n Amount to be credited:");
+                        var creditValue = Console.ReadLine();
+                        if(!ValidateCreditInput(creditValue)) break;
+
+                        //call business to create accout
+                        accounts  = svcAccount.CreateAccount(creditValue);
+
+                        Console.Clear();
                         Log.Logger.Information(JsonSerializer.Serialize(accounts));
-                        operation = StartGreeting();
+
+                        operation = startView();
                         break;
                     case Operations.Transaction_Autorization:
                         Console.Clear();
                         Log.Logger.Information(JsonSerializer.Serialize(accounts));
-                        operation = StartGreeting();
+                        operation = startView();
                         break;
                     default:
+                        Console.Clear();
+                        Log.Logger.Information("Chose a valid option!");
+                        startView();
                         break;
                 }
             }
         }
 
-        /// <summary>
-        /// Creat the start page console
-        /// </summary>
-        private static Operations StartGreeting()
+        private static bool ValidateCreditInput(string input)
         {
-            string option = startView();
-            var errorMessage =  ValidateOperation(option);
-
-            while (!string.IsNullOrEmpty(errorMessage))
-            {
-                Console.Clear();
-                Log.Logger.Information(errorMessage);
-
-                option = startView();
-                errorMessage = ValidateOperation(option);
-            }
-
+            int value = 0;
+            if (int.TryParse(input, out value) && value > 0) return true;
+            
             Console.Clear();
-            return (Operations)Convert.ToInt32(option);
+            Log.Logger.Information("\n Invalid amount! Try again!");
+            return false;
         }
 
         /// <summary>
         /// Create and control start layout with validations
         /// </summary>
         /// <returns>Selected Operation</returns>
-        private static string startView()
+        private static Operations startView()
         {
             Log.Logger.Information("\n Operations:\n    {0}:         Option: {1}" +
                 " \n    {2}: Option: {3}" +
@@ -124,7 +141,15 @@ namespace NuBkTeste01
                                         Operations.Leave.ToString(),
                                         (int)Operations.Leave);
             string input = Console.ReadLine();
-            return input;
+
+            int value = 0;
+            if (!int.TryParse(input, out value) && !Enum.IsDefined(typeof(Operations), value))
+            {
+                Console.Clear();
+                Log.Logger.Information("Chose a valid option!");
+                value = (int)startView();
+            }
+                return (Operations)value;
         }
 
         /// <summary>
