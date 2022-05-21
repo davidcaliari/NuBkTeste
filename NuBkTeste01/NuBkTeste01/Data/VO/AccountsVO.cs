@@ -6,7 +6,7 @@ namespace NuBkTeste01.Data.VO
 {
     public class AccountsVO
     {
-        public AccountVO accounts { get; set; } = new AccountVO();
+        public AccountVO account { get; set; }// = new AccountVO();
         public List<string> violations { get; set; } = new List<string>();
 
     }

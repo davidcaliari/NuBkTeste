@@ -2,46 +2,52 @@ using System;
 using Xunit;
 using NuBkTeste01;
 using NuBkTeste01.Data.VO;
+using System.Text.Json;
+using System.Collections.Generic;
+using System.Linq;
+using System.Collections;
 
 namespace NuBkTeste01UnitTest
 {
     public class SelectOptionTests
     {
         [Fact]
-        public void ValidCreatAccountOption()
+        public void ValidCreatAccount()
         {
-
-            Assert.Empty(Program.ValidateOperation("1"));
-        }
-        [Fact]
-        public void ValidTransactionAutorizationOption()
-        {
-            Assert.Empty(Program.ValidateOperation("2"));
-        }
-
-        [Fact]
-        public void InvalidCreatAccountOption()
-        {
-            Assert.NotEmpty(Program.ValidateOperation("g"));
-        }
-        [Fact]
-        public void InvalidTransactionAutorizationOption()
-        {
-            Assert.NotEmpty(Program.ValidateOperation("0"));
-        }
-
-        [Fact]
-        public void InvalidDuplicatedtAccount()
-        {
-            Program.accounts = new AccountsVO()
-            {
-                accounts = new AccountVO()
-                {
-                    activeCard = true,
-                    availableLimit = 75
-                }
+            List<string> jsonParam = new List<string> {
+                @"{ ""account"": { ""activeCard"": true, ""availableLimit"": 100 } }"
             };
-            Assert.NotEmpty(Program.ValidateOperation("1"));
+            AccountsVO account = JsonSerializer.Deserialize<AccountsVO>(jsonParam.First());
+            Assert.Equal(JsonSerializer.Serialize(account), JsonSerializer.Serialize(Program.startViewJson(jsonParam, true)));
+        }
+
+        [Fact]
+        public void ValidTransactionAutorization()
+        {
+            List<string> jsonParam = new List<string> { 
+                @"{ ""account"": { ""activeCard"": true, ""availableLimit"": 100 } }",
+                @"{ ""transaction"": { ""merchant"": ""Burger King"", ""amount"": 20, ""time"": ""2019-02-13T10:00:00"" } }"
+            };
+            Assert.Equal(80, Program.startViewJson(jsonParam, true).account.availableLimit);
+        }
+
+        [Fact]
+        public void InvalidCreatAccount()
+        {
+            List<string> jsonParam = new List<string> {
+                @"{ { ""activeCard"": true, ""availableLimit"": 100 } }"
+            };
+            Assert.Null(Program.startViewJson(jsonParam, true).account);
+        }
+
+        [Fact]
+        public void InvalidTransactionAutorization()
+        {
+            List<string> jsonParam = new List<string> {
+                @"{ ""account"": { ""activeCard"": true, ""availableLimit"": 100 } }",
+                @"{ { ""merchant"": ""Burger King"", ""amount"": 20, ""time"": ""2019-02-13T10:00:00"" } }"
+            };
+            Assert.Equal(100, Program.startViewJson(jsonParam, true).account.availableLimit);
         }
     }
 }

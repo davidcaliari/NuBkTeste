@@ -6,7 +6,7 @@ using NuBkTeste01;
 
 namespace NuBkTeste01.Business.Implementation
 {
-    public class AccountBusinessImplementation : IAccountBusiness
+    public class TransactionBusinessImplementation : IAccountBusiness
     {
         public AccountsVO CreateAccount(string creditValue)
         {
