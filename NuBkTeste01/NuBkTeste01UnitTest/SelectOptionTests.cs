@@ -14,6 +14,8 @@ namespace NuBkTeste01UnitTest
         [Fact]
         public void ValidCreatAccount()
         {
+            Program.BeginConfig();
+
             List<string> jsonParam = new List<string> {
                 @"{ ""account"": { ""activeCard"": true, ""availableLimit"": 100 } }"
             };
@@ -24,6 +26,8 @@ namespace NuBkTeste01UnitTest
         [Fact]
         public void ValidTransactionAutorization()
         {
+            Program.BeginConfig();
+
             List<string> jsonParam = new List<string> { 
                 @"{ ""account"": { ""activeCard"": true, ""availableLimit"": 100 } }",
                 @"{ ""transaction"": { ""merchant"": ""Burger King"", ""amount"": 20, ""time"": ""2019-02-13T10:00:00"" } }"
@@ -34,6 +38,8 @@ namespace NuBkTeste01UnitTest
         [Fact]
         public void InvalidCreatAccount()
         {
+            Program.BeginConfig();
+
             List<string> jsonParam = new List<string> {
                 @"{ { ""activeCard"": true, ""availableLimit"": 100 } }"
             };
@@ -43,9 +49,23 @@ namespace NuBkTeste01UnitTest
         [Fact]
         public void InvalidTransactionAutorization()
         {
+            Program.BeginConfig();
+
             List<string> jsonParam = new List<string> {
                 @"{ ""account"": { ""activeCard"": true, ""availableLimit"": 100 } }",
                 @"{ { ""merchant"": ""Burger King"", ""amount"": 20, ""time"": ""2019-02-13T10:00:00"" } }"
+            };
+            Assert.Equal(100, Program.startViewJson(jsonParam, true).account.availableLimit);
+        }
+
+        [Fact]
+        public void InvalidAmoutTransactionAutorization()
+        {
+            Program.BeginConfig();
+
+            List<string> jsonParam = new List<string> {
+                 @"{ ""account"": { ""activeCard"": true, ""availableLimit"": 100 } }",
+                 @"{ ""transaction"": { ""merchant"": ""Burger King"", ""amount"": 120, ""time"": ""2019-02-13T10:00:00"" } }"
             };
             Assert.Equal(100, Program.startViewJson(jsonParam, true).account.availableLimit);
         }
